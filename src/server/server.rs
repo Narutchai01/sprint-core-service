@@ -1,6 +1,7 @@
 #![allow(async_fn_in_trait)]
 use crate::config::Config;
 use axum::{Router, routing::get};
+use sea_orm::DatabaseConnection;
 use std::net::SocketAddr;
 
 pub trait IServer {
@@ -9,11 +10,12 @@ pub trait IServer {
 
 pub struct ServerImpl {
     cfg: Config,
+    db: DatabaseConnection,
 }
 
 impl ServerImpl {
-    pub fn new(cfg: Config) -> Self {
-        ServerImpl { cfg }
+    pub fn new(cfg: Config, db: DatabaseConnection) -> Self {
+        ServerImpl { cfg, db }
     }
 }
 
