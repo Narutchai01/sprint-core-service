@@ -1,5 +1,6 @@
 #![allow(async_fn_in_trait)]
 use crate::config::Config;
+use crate::routers::{IRouters, RoutersImpl};
 use axum::{Router, routing::get};
 use sea_orm::DatabaseConnection;
 use std::net::SocketAddr;
@@ -27,6 +28,8 @@ impl IServer for ServerImpl {
             "/",
             get(|| async { "Hello, your going to Sprint managment" }),
         );
+
+        let app = RoutersImpl::new(app, self.db.clone()).build();
 
         let addr = SocketAddr::from(([0, 0, 0, 0], port as u16));
         println!("🚀 Server listening on http://localhost:{}", port);
