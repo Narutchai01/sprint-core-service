@@ -9,18 +9,18 @@ pub trait IServer {
     async fn start(&self);
 }
 
-pub struct ServerImpl {
-    cfg: Config,
+pub struct ServerImpl<'a> {
+    cfg: &'a Config,
     db: DatabaseConnection,
 }
 
-impl ServerImpl {
-    pub fn new(cfg: Config, db: DatabaseConnection) -> Self {
+impl<'a> ServerImpl<'a> {
+    pub fn new(cfg: &'a Config, db: DatabaseConnection) -> Self {
         ServerImpl { cfg, db }
     }
 }
 
-impl IServer for ServerImpl {
+impl IServer for ServerImpl<'_> {
     async fn start(&self) {
         let cfg = &self.cfg;
         let port = cfg.app_port;

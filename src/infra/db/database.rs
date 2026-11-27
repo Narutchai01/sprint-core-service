@@ -1,23 +1,24 @@
 #![allow(async_fn_in_trait)]
+use crate::config::config::Config;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
 use std::time::Duration;
 
 pub trait DatabaseConnect {
     async fn connect(&self) -> Result<DatabaseConnection, DbErr>;
 }
-pub struct DatabaseConnectImpl {
-    connection_string: String,
+pub struct DatabaseConnectImpl<'a> {
+    cfg: &'a Config,
 }
 
-impl DatabaseConnectImpl {
-    pub fn new(connection_string: String) -> Self {
-        Self { connection_string }
+impl<'a> DatabaseConnectImpl<'a> {
+    pub fn new(cfg: &'a Config) -> Self {
+        Self { cfg }
     }
 }
 
-impl DatabaseConnect for DatabaseConnectImpl {
+impl<'a> DatabaseConnect for DatabaseConnectImpl<'a> {
     async fn connect(&self) -> Result<DatabaseConnection, DbErr> {
-        let mut options = ConnectOptions::new(self.connection_string.to_owned());
+        let mut options = ConnectOptions::new(&self.cfg.db_url);
 
         options
             .max_connections(10)

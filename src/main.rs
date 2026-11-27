@@ -5,10 +5,9 @@ use sprint_core_service::server::{IServer, ServerImpl};
 #[tokio::main]
 async fn main() {
     let cfg = Config::load();
-    let db_url = cfg.db_url.clone();
-    let db = DatabaseConnectImpl::new(db_url);
+    let db = DatabaseConnectImpl::new(&cfg);
     let db_conn = db.connect().await.unwrap();
-    let server = ServerImpl::new(cfg, db_conn);
+    let server = ServerImpl::new(&cfg, db_conn);
 
     server.start().await
 }
